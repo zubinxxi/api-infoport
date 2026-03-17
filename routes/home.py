@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 
 
-# Ejecutamos APIRouter asignandolo a la variable router
+# Ejecutamos APIRouter asignandolo a la variable router.
 router = APIRouter()
 
 
