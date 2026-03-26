@@ -1,28 +1,31 @@
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
+from fastapi.staticfiles import StaticFiles # Importar StaticFiles para servir archivos estáticos
+from fastapi.openapi.docs import get_swagger_ui_html # Importar función para personalizar Swagger UI
 
-from routes.home import router as router_home
-from routes.movies import router as movies_router
+from routes.containers import router as containers_router # Importar el router de contenedores
 
 # 1. Desactivar docs predeterminados al crear la app
-#app = FastAPI(docs_url=None, redoc_url=None)
-app = FastAPI()
+app = FastAPI(docs_url=None, redoc_url=None)
 
 # Montar carpeta estática
-app.mount("/static", StaticFiles(directory="static"), name="static")
-app.title = "API - INFOPORT"
-app.version = "1.0.0"
-app.description = "Esta es una API de ejemplo creada con FastAPI"
+app.mount("/static", StaticFiles(directory="static"), name="static") # Montar la carpeta "static" para servir archivos estáticos
+app.title = "INFOPORT - API" # Personalizar el título de la documentación
+app.version = "1.0.0" # Personalizar la versión de la documentación
+app.description = "API para gestionar movimientos de contenedores"  # Personalizar la descripción de la documentación
+
+@app.get("/docs", include_in_schema=False) # Personalizar la ruta de Swagger UI
+async def custom_swagger_ui_html(): # Función para servir Swagger UI personalizado
+    return get_swagger_ui_html(
+        openapi_url=app.openapi_url, # URL del esquema OpenAPI
+        title=app.title, # Título de la documentación
+        swagger_favicon_url="/static/favicon.png" # Ruta a tu favicon personalizado
+    )
 
 
 app.openapi_tags = [
     {
-        "name": "Home",
-        "description": "Rutas de inicio y bienvenida",
-    },
-    {
-        "name": "Movies",
-        "description": "Rutas relacionadas con películas",
+        "name": "Movimiento de Contenedores",
+        "description": "Rutas para gestionar movimientos de contenedores",
     },                                  
 ]
 
@@ -30,15 +33,5 @@ app.swagger_ui_parameters = {
     "syntaxHighlight": {"theme": "obsidian",}
 }
 
-#@app.get("/docs", include_in_schema=False)
-#async def custom_swagger_ui_html():
-#    return get_swagger_ui_html(
-#        openapi_url=app.openapi_url,
-#        title="Mi API con FastAPI",
-#        # 3. Define aquí la URL de tu icono (relativa o absoluta)
-#        swagger_favicon_url="/static/favicon.jpg", 
-#        # Si usas local: swagger_favicon_url="/static/favicon.png"
-#    )
 
-app.include_router(router_home)
-app.include_router(movies_router)
+app.include_router(containers_router)
