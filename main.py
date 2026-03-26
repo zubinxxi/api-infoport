@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles # Importar StaticFiles para servir archivos estáticos
 from fastapi.openapi.docs import get_swagger_ui_html # Importar función para personalizar Swagger UI
+from fastapi.openapi.docs import get_redoc_html # Importar función para personalizar ReDoc
 
 from routes.containers import router as containers_router # Importar el router de contenedores
 
@@ -19,6 +20,15 @@ async def custom_swagger_ui_html(): # Función para servir Swagger UI personaliz
         openapi_url=app.openapi_url, # URL del esquema OpenAPI
         title=app.title, # Título de la documentación
         swagger_favicon_url="/static/favicon.png" # Ruta a tu favicon personalizado
+    )
+
+@app.get("/redoc", include_in_schema=False) # Personalizar la ruta de ReDoc
+async def custom_redoc_ui_html(): # Función para servir ReDoc personalizado
+    return get_redoc_html(
+        openapi_url=app.openapi_url, # URL del esquema OpenAPI
+        title=app.title, # Título de la documentación
+        redoc_favicon_url="/static/favicon.png", # Ruta a tu favicon personalizado
+        with_google_fonts=True,
     )
 
 
