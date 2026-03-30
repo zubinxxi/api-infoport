@@ -8,4 +8,4 @@ router = APIRouter()
 # Definimos las rutas con lo decoradores
 @router.get("/movement-container", tags=["Movimiento de Contenedores"])
 def get_movement_container():
-   return {"mensaje":"Movimiento de contenedores"}
+   return {"page_title":"Movimiento de contenedores"}
