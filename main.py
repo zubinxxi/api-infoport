@@ -19,16 +19,18 @@ async def custom_swagger_ui_html(): # Función para servir Swagger UI personaliz
     return get_swagger_ui_html(
         openapi_url=app.openapi_url, # URL del esquema OpenAPI
         title=app.title, # Título de la documentación
-        swagger_favicon_url="/static/favicon.png" # Ruta a tu favicon personalizado
+        swagger_favicon_url="/static/favicon.png", # Ruta a tu favicon personalizado
+        swagger_ui_parameters={"syntaxHighlight": {"theme": "obsidian",}}, # Personalizar el tema de resaltado de sintaxis a "obsidian"
+        
     )
 
-@app.get("/redoc", include_in_schema=False) # Personalizar la ruta de ReDoc
+@app.get("/redocs", include_in_schema=False) # Personalizar la ruta de ReDoc
 async def custom_redoc_ui_html(): # Función para servir ReDoc personalizado
     return get_redoc_html(
         openapi_url=app.openapi_url, # URL del esquema OpenAPI
         title=app.title, # Título de la documentación
         redoc_favicon_url="/static/favicon.png", # Ruta a tu favicon personalizado
-        with_google_fonts=True,
+        with_google_fonts=True
     )
 
 
@@ -38,10 +40,6 @@ app.openapi_tags = [
         "description": "Rutas para gestionar movimientos de contenedores",
     },                                  
 ]
-
-app.swagger_ui_parameters = {
-    "syntaxHighlight": {"theme": "obsidian",}
-}
 
 
 app.include_router(containers_router)
